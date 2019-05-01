@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login to my Poll App</h1>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            {% if error %}
+            <p style="color:red;">{{ error }}</p>
+            {% endif %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Username</label>
+                    <input type="text" name="username">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Password</label>
+                    <input type="password" name="password">
+                </div>
+            </div>
+            <input type="hidden" name="next_url" value="{{ next_url }}">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+</html>

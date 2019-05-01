@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>poll</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1><b>Poll :</b> {{ poll.title }}</h1>
+        <form method="POST" action="{% url 'poll' id=poll.id %}">
+        {% csrf_token %}
+            <div class="row">
+                {% for question in poll.question_set.all%}
+                 <div class="col-4 m-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>{{question.text}}</p>
+                            {% for choice in question.choice_set.all %}
+                            <div class="radio">
+                                <label><input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}" {% if choice.answer %}checked="checked"{% endif %}> {{choice.text}}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary m-2">บันทึก</button>
+                <a type="button" class="btn btn-warning m-2" href="{% url 'index' %}">กลับหน้าแรก</a>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+</html>

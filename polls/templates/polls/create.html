@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <title>Create</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create new poll</h1>
+        {% if success %}
+        <p>{{ success }}</p>
+        {% endif %}
+        <form method="POST" action="{% url 'create' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }} 
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label id="{{form.title.id_for_label}}">{{ form.title.label }}</label>
+                    <span>{{ form.title.errors }}{{ form.title }}</span>
+                </div>
+                <!-- <div class="form-group col-md-2">
+                    <label id="{{form.no_questions.id_for_label}}">{{ form.no_questions.label }}</label>
+                    <span>{{ form.no_questions.errors }}{{ form.no_questions }}</span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label id="{{form.email.id_for_label}}">{{ form.email.label }}</label>
+                    <span>{{ form.email.errors }}{{ form.email }}</span>
+                </div> -->
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label id="{{form.start_date.id_for_label}}">{{ form.start_date.label }}</label>
+                    <span>{{ form.start_date.errors }}{{ form.start_date }}</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label id="{{form.end_date.id_for_label}}">{{ form.end_date.label }}</label>
+                    <span>{{ form.end_date.errors }}{{ form.end_date }}</span>
+                </div>
+            </div>
+            <div class="">
+                <h2>Add Questions</h2>
+                {{ formset }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</body>
+<style>
+    .errorlist {
+        color: red;
+    }
+</style>
+
+</html>

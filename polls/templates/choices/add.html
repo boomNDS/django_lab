@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h2>Add choice(s) for {{ question }}</h2>
+        <h3 v-if="success">Create successfully!</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Choice Text</th>
+                    <th scope="col">Choice Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="choice in choices">
+                    <td><input type="text" v-model="choice.text"></td>
+                    <td><input type="number" v-model="choice.value"></td>
+                    <td><input type="button" class="btn btn-danger" @click="deleteChoice(choice)" value="Del"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-2">
+                <input type="button" @click="addChoice" value="ADD NEW CHOICE">
+            </div>
+            <div class="col-2">
+                <input type="button" @click="submit" value="SAVE NEW CHOICE">
+            </div>
+            <div class="col-4">
+                <p v-for="error in errorMsg">
+                    [[ error ]]
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/vue.js' %}"></script>
+<script src="{% static 'js/js.cookie.js' %}"></script>
+<script src="{% static 'js/axios.min.js'%}"></script>
+
+<script>
+    var csrftoken = Cookies.get('csrftoken');
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ["[[","]]"],
+        data: {
+            success: false,
+            errorMsg: '',  
+            choices: []
+        },
+        methods: {
+            addChoice(){
+                this.choices.push(
+                    {
+                        text:'',
+                        value: 0
+                    }
+                )
+            },
+            deleteChoice(choice){
+                let index = this.choices.indexOf(choice)
+                this.choices.splice(index,1)
+            },
+            submit(){
+                console.log(this.choices)
+                axios
+                .post(
+                    'http://127.0.0.1:8000/polls/api/'+ '{{ question.id }}' +'/add-choice/',
+                    this.choices,
+                    {headers:{'X-CSRFTOKEN':csrftoken}}
+                )
+                .then(
+                    response =>{
+                        this.success = true
+                        this.errorMsg = ''
+                    }
+                )
+                .catch(error =>{
+                    console.log(error.response)
+                    this.errorMsg = error.response.data.message
+                })
+            }
+        },
+    })
+</script>
+
+</html>
